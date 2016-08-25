@@ -10,9 +10,5 @@
 dat.trait <- read.csv('Desktop/china project/r_code_from_brian/ChinaLeafTraitData20160623Site.csv')
 
 
-#subsets data by site
-low <- subset(dat.trait, dat.trait$Site == 'L')
-mid <- subset(dat.trait, dat.trait$Site == 'M')
-alpine <- subset(dat.trait, dat.trait$Site == 'A')
-high <- subset(dat.trait, dat.trait$Site == 'H')
+
 
