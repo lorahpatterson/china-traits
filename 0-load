@@ -1,0 +1,17 @@
+#####
+#####  PFTC 2016 
+#####  
+#####  Using spatial and phylogentic leaf-trait variance partitioning to determine drivers of trait diversity and community structure along an elevation gradient in Southwestern China
+#####
+#####  0-load.rtf: Loads datasets
+
+
+#reads data for megan
+dat.trait <- read.csv('PFTC2-Course Details/Project 1/R-script/r_code_from_brian/ChinaLeafTraitData20160623Site.csv')
+
+#subsets data by site
+low <- subset(dat.trait, dat.trait$Site == 'L')
+mid <- subset(dat.trait, dat.trait$Site == 'M')
+alpine <- subset(dat.trait, dat.trait$Site == 'A')
+high <- subset(dat.trait, dat.trait$Site == 'H')
+
