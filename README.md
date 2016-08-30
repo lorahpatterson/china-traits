@@ -30,7 +30,6 @@ e.nh94@hotmail.com
 
 Lorah Patterson
 lorahbeth@gmail.com
-+01 269-873-8440
 
 Christien Steyn
 christeyntji@live.co.za
