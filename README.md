@@ -24,11 +24,9 @@ Name/Titles of all Project Members
 ----------------------------------
 Brian Maitner
 bmaitner@gmail.com
-+01 616-856-0780
 
 Elisabeth Nesheim-Hauge
 e.nh94@hotmail.com
-+47 91164990
 
 Lorah Patterson
 lorahbeth@gmail.com
@@ -36,15 +34,12 @@ lorahbeth@gmail.com
 
 Christien Steyn
 christeyntji@live.co.za
-+27 71 851 4911
 
 Ahui Peng
 117855300@qq.com
-+86 18608022816
 
 Megan Sullivan
 sullivanmks@gmail.com
-+01 330-280-1896
 
 ------------------------------------
 Location of Data and Supporting Info
