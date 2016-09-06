@@ -1,0 +1,120 @@
+setwd("~/Desktop/CHINA PROJECT/r_code_from_brian/")
+chinatraits <- read.csv("ChinaLeafTraitData20160623Site.csv")
+
+#?subset
+#low <- subset(chinatraits, chinatraits$Site == "L")
+#mean(na.rm = TRUE, low$SLA_cm2.g)
+
+chinatraits$Leaf_Thickness_Ave_mm<-rowMeans(chinatraits[13:18], na.rm=TRUE, dims= 1) #to calculate the average leaf thickness with the six thickness measurements
+?rowMeans
+which(chinatraits$)
+output_traitmeanandvar<-NULL
+for(i in 1:length(unique(chinatraits$Site))){
+  site_i<-as.character(unique(chinatraits$Site)[i])
+  print(site_i)
+  subset_i<-subset(chinatraits,chinatraits$Site==site_i)  
+  elevation_i<-subset_i$Elevation[1]
+  mean_area<-mean(subset_i$Leaf_Area_cm2, na.rm=TRUE)
+  var_area<-var(subset_i$Leaf_Area_cm2, na.rm=TRUE)
+  mean_thickness<-mean(subset_i$Leaf_Thickness_Ave_mm, na.rm=TRUE)
+  var_thickness<-var(subset_i$Leaf_Thickness_Ave_mm, na.rm=TRUE)
+  mean_SLA<-mean(subset_i$SLA_cm2.g, na.rm=TRUE)
+  var_SLA<-var(subset_i$SLA_cm2.g, na.rm=TRUE)
+  mean_LDMC<-mean(subset_i$LDMC, na.rm=TRUE)
+  var_LDMC<-var(subset_i$LDMC, na.rm=TRUE)
+  output_traitmeanandvar_i<-cbind(site_i,elevation_i,mean_area,var_area,mean_thickness, var_thickness, mean_SLA, var_SLA, mean_LDMC, var_LDMC)
+  output_traitmeanandvar<-rbind(output_traitmeanandvar,output_traitmeanandvar_i)
+  print(output_traitmeanandvar)
+}
+
+write.csv(output_traitmeanandvar, file="ChinaLeafTraitData_MeanAndVar_08182016.csv")
+
+class(output_traitmeanandvar) #class is a matrix and we need to make it a data frame so that we can use $ indexing and if you add a column, you won't have to adjust all the indexing numbers.
+output_traitmeanandvar<-as.data.frame(output_traitmeanandvar) #making it a data frame
+class(output_traitmeanandvar)
+str(output_traitmeanandvar) # all are factors, so need to change to numeric in order to plot
+output_traitmeanandvar$mean_area<-as.numeric(as.character(output_traitmeanandvar$mean_area)) #must convert factor to character before you convert it to numeric in R for all variables that should be numbers.
+output_traitmeanandvar$elevation_i<-as.numeric(as.character(output_traitmeanandvar$elevation_i))
+output_traitmeanandvar$var_area<-as.numeric(as.character(output_traitmeanandvar$var_area))
+output_traitmeanandvar$mean_thickness<-as.numeric(as.character(output_traitmeanandvar$mean_thickness))
+output_traitmeanandvar$var_thickness<-as.numeric(as.character(output_traitmeanandvar$var_thickness))
+output_traitmeanandvar$mean_SLA<-as.numeric(as.character(output_traitmeanandvar$mean_SLA))
+output_traitmeanandvar$var_SLA<-as.numeric(as.character(output_traitmeanandvar$var_SLA))
+output_traitmeanandvar$var_LDMC<-as.numeric(as.character(output_traitmeanandvar$var_LDMC))
+output_traitmeanandvar$mean_LDMC<-as.numeric(as.character(output_traitmeanandvar$mean_LDMC))
+
+plot(output_traitmeanandvar$mean_area ~ output_traitmeanandvar$elevation_i)
+
+
+### To make a graph separated by species and site rather than just site.#### Should use generalized linear models in the future because data is categorical!!!!
+
+chinatraits$Leaf_Area_cm2[which(chinatraits$Leaf_Area_cm2==max(na.omit(chinatraits$Leaf_Area_cm2)))]<-NA
+
+output_speciestraitmeanandvar<-NULL
+for(i in 1:length(unique(cbind(as.character(chinatraits$Site), as.character(chinatraits$Taxon_TNRS_corrected)))[,1])){
+  sitebyspecies_i<-unique(cbind(as.character(chinatraits$Site), as.character(chinatraits$Taxon_TNRS_corrected)))[i,]
+  #print(sitebyspecies_i)
+  site_i<-sitebyspecies_i[1]
+  species_i<-sitebyspecies_i[2]
+  subset_i<-subset(chinatraits,chinatraits$Site==site_i & chinatraits$Taxon_TNRS_corrected==species_i )  
+  elevation_i<-subset_i$Elevation[1]
+  mean_area<-mean(subset_i$Leaf_Area_cm2, na.rm=TRUE)
+  var_area<-var(subset_i$Leaf_Area_cm2, na.rm=TRUE)
+  mean_thickness<-mean(subset_i$Leaf_Thickness_Ave_mm, na.rm=TRUE)
+  var_thickness<-var(subset_i$Leaf_Thickness_Ave_mm, na.rm=TRUE)
+  mean_SLA<-mean(subset_i$SLA_cm2.g, na.rm=TRUE)
+  var_SLA<-var(subset_i$SLA_cm2.g, na.rm=TRUE)
+  mean_LDMC<-mean(subset_i$LDMC, na.rm=TRUE)
+  var_LDMC<-var(subset_i$LDMC, na.rm=TRUE)
+  output_speciestraitmeanandvar_i<-cbind(site_i,species_i,elevation_i,mean_area,var_area,mean_thickness, var_thickness, mean_SLA, var_SLA, mean_LDMC, var_LDMC)
+  output_speciestraitmeanandvar<-rbind(output_speciestraitmeanandvar,output_speciestraitmeanandvar_i)
+  #print(output_speciestraitmeanandvar)
+}
+
+class(output_speciestraitmeanandvar)
+output_speciestraitmeanandvar<-as.data.frame(output_speciestraitmeanandvar)
+str(output_speciestraitmeanandvar)
+
+output_speciestraitmeanandvar$elevation_i<-as.numeric(as.character(output_speciestraitmeanandvar$elevation_i))
+output_speciestraitmeanandvar$mean_area<-as.numeric(as.character(output_speciestraitmeanandvar$mean_area))
+output_speciestraitmeanandvar$var_area<-as.numeric(as.character(output_speciestraitmeanandvar$var_area))
+output_speciestraitmeanandvar$mean_thickness<-as.numeric(as.character(output_speciestraitmeanandvar$mean_thickness))
+output_speciestraitmeanandvar$var_thickness<-as.numeric(as.character(output_speciestraitmeanandvar$var_thickness))
+output_speciestraitmeanandvar$mean_SLA<-as.numeric(as.character(output_speciestraitmeanandvar$mean_SLA))
+output_speciestraitmeanandvar$var_SLA<-as.numeric(as.character(output_speciestraitmeanandvar$var_SLA))
+output_speciestraitmeanandvar$mean_LDMC<-as.numeric(as.character(output_speciestraitmeanandvar$mean_LDMC))
+output_speciestraitmeanandvar$var_LDMC<-as.numeric(as.character(output_speciestraitmeanandvar$var_LDMC))
+
+plot(output_speciestraitmeanandvar$mean_area ~ output_speciestraitmeanandvar$elevation_i, main="Mean leaf area along elevational gradient \n by species", xlab="Elevation (m)", ylab="Mean leaf area (cm2)", ylim = c(0,40))
+abline(lm(formula = output_speciestraitmeanandvar$mean_area ~ output_speciestraitmeanandvar$elevation_i))
+
+
+boxplot(output_speciestraitmeanandvar$mean_area ~ output_speciestraitmeanandvar$elevation_i, ylim = c(0,25), main="Mean leaf area along elevational gradient \n by species", xlab="Elevation (m)", ylab="Mean leaf area (cm2)")
+summary_meanleafarea<-lm(output_speciestraitmeanandvar$mean_area ~ output_speciestraitmeanandvar$elevation_i)
+summary(summary_meanleafarea)
+
+plot(output_speciestraitmeanandvar$var_area ~ output_speciestraitmeanandvar$elevation_i, main="Variance in leaf area along elevational gradient", xlab="Elevation (m)", ylab="Variance (cm2)", ylim = c(0,175))
+
+boxplot(output_speciestraitmeanandvar$var_area ~ output_speciestraitmeanandvar$elevation_i, ylim = c(0,100), main="Variance of leaf area along elevational gradient \n by species", xlab="Elevation (m)", ylab="Leaf area variance (cm2)")
+
+area.var<-lm(formula = output_speciestraitmeanandvar$var_area ~ output_speciestraitmeanandvar$elevation_i)
+summary(area.var)
+
+thick.var<-lm(formula = output_speciestraitmeanandvar$var_thickness ~ output_speciestraitmeanandvar$elevation_i)
+summary(thick.var)
+
+trade.var<-lm(formula = output_speciestraitmeanandvar$var_area ~ output_speciestraitmeanandvar$var_thickness)
+summary(trade.var)
+plot(output_speciestraitmeanandvar$var_area ~ output_speciestraitmeanandvar$var_thickness, ylim=c(0,600), xlim=c(0, 0.20))
+
+trade.mean<-lm(formula = output_speciestraitmeanandvar$mean_area ~ output_speciestraitmeanandvar$mean_thickness)
+summary(trade.mean)
+plot(output_speciestraitmeanandvar$mean_area ~ output_speciestraitmeanandvar$mean_thickness, main="Mean leaf area vs mean leaf thickness", xlab="Mean leaf area (cm2)", ylab="Mean leaf thickness (mm)")
+
+cor.test(output_speciestraitmeanandvar$mean_area, output_speciestraitmeanandvar$mean_thickness)
+
+plot(output_speciestraitmeanandvar$mean_thickness ~ output_speciestraitmeanandvar$elevation_i, main="Mean leaf thickness along elevational gradient \n by species", xlab="Elevation (m)", ylab="Mean leaf thickness (mm)", ylim = c(0,1))
+abline(lm(formula = output_speciestraitmeanandvar$mean_thickness ~ output_speciestraitmeanandvar$elevation_i))
+
+
+boxplot(output_speciestraitmeanandvar$var_thickness ~ output_speciestraitmeanandvar$elevation_i, ylim = c(0,0.05), main="Variance of leaf thickness along elevational gradient \n by species", xlab="Elevation (m)", ylab="Thickness variance (mm)")
